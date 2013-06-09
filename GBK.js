@@ -15,15 +15,15 @@ exports.ec_GBK = function(str){
 	
 }
 
+
 exports.dc_GBK = function(arr){
-	var time1 = new Date(),
-		kb = '',str="";
+	var time1 = new Date();
+	var kb = '',str="";
 	for(var n = 0 , max = arr.length; n<max ; n++){
-		var Code = arr[n],
-			But = Code.toString(16);
+		var Code = arr[n], But = Code.toString(16);
 		if(kb){
-			var c = (kb + But).toUpperCase(),
-				i = ua.indexOf("|" + c + ",");
+			var c = (kb + But).toUpperCase();
+			var i = ua.indexOf("|" + c + ",");
 			if (i != -1) {
 				var vc = ua.lastIndexOf(',', i) + 1;
 				c = Number('0x' + ua.substring(vc, i))

@@ -10,9 +10,9 @@ var IP_RECORD_LENGTH = 7,
 
 exports.DBUG = function(a){dbug=a;}
 
-exports.info = function(qqWryPath,callback,d){
-	if(d){dbug=d}
-	var rs = fs.createReadStream(qqWryPath,{ flags: 'r', fd: null, mode: 0666, bufferSize: 64 * 1024});
+exports.info = function(callback){
+	qqWryPath = __dirname + "/qqwry.dat";
+	var rs = fs.createReadStream(qqWryPath);
 	var data,n=0;
 	rs.on("data", function (chunk){
 		ipFileBuffers.push(chunk);
@@ -20,9 +20,11 @@ exports.info = function(qqWryPath,callback,d){
 	});
 	rs.on("end", function () {
 		switch(ipFileBuffers.length) {//拼接Buffer
-			case 0: ipFileBuffer = new Buffer(0);
+			case 0: 
+				ipFileBuffer = new Buffer(0);
 				break;
-			case 1: ipFileBuffer = ipFileBuffers[0];
+			case 1: 
+				ipFileBuffer = ipFileBuffers[0];
 				break;
 			default:
 				ipFileBuffer = new Buffer(ipFmax);
@@ -37,7 +39,7 @@ exports.info = function(qqWryPath,callback,d){
 		ipBegin = setBuffer4();
 		ipEnd = setBuffer4(4);
 		ipCount = (ipEnd-ipBegin)/7+1;
-		dbug || console.log("起始偏移为:"+ipBegin+" 末位偏移为:"+ipEnd + " 总记录:" + ipCount + "条.");
+		console.log("IP Server Start!(Begin:"+ipBegin+" End:"+ipEnd + " Count:" + ipCount + ")");
 		if(typeof callback == "function"){callback();}
 	});
 }

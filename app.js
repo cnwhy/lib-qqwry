@@ -1,16 +1,5 @@
-var qqwry = require('./qqwry.js');
+var qqwry = require('./index.js');
 var time1 = new Date();
-
-/*
-var fs = require("fs"),arr = [];
-var rs = fs.createReadStream('./fs.js');
-rs.on("data", function (trunk){
-	arr.push(trunk);
-})
-rs.on("end",function(){
-	console.log(arr);
-})
-*/
 
 qqwry.info(function(){
 	var arguments = process.argv.splice(2);
