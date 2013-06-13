@@ -10,10 +10,11 @@ var IP_RECORD_LENGTH = 7,
 
 exports.DBUG = function(a){dbug=a;}
 
-exports.info = function(callback){
-	qqWryPath = __dirname + "/qqwry.dat";
+exports.info = function(dataPath){
+	qqWryPath = typeof(dataPath) == "string" ? dataPath : (__dirname + "/qqwry.dat");
 	var rs = fs.createReadStream(qqWryPath);
 	var data,n=0;
+	var callback = typeof arguments[arguments.length-1] == "function" ? arguments[arguments.length-1] : function(){};
 	rs.on("data", function (chunk){
 		ipFileBuffers.push(chunk);
 		ipFmax += chunk.length;
@@ -40,7 +41,7 @@ exports.info = function(callback){
 		ipEnd = setBuffer4(4);
 		ipCount = (ipEnd-ipBegin)/7+1;
 		console.log("IP Server Start!(Begin:"+ipBegin+" End:"+ipEnd + " Count:" + ipCount + ")");
-		if(typeof callback == "function"){callback();}
+		callback();
 	});
 }
 
@@ -120,11 +121,11 @@ function setBuffer3(n){
 
 //转化制定位数的LITTLE-ENDIAN为BIG-ENDIAN
 function LITTLEtoBIG(data,begin,end){
-	console.log(data);
+	dbug && console.log(data);
 	var int_=0.0 , i=begin || 0; max = end || (data.length-1);
 	for(var n = 0;n<data.length;n++){
 		int_ |= (data[i++] << (8*n));
-		console.log(int_.toString(16));
+		dbug && console.log(int_.toString(16));
 		if(i>max){break;}
 	}
 	return int_;

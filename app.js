@@ -1,13 +1,12 @@
 var qqwry = require('./index.js');
 var time1 = new Date();
 
-qqwry.info(function(){
+qqwry.info("./qqwry.dat",function(){
 	var arguments = process.argv.splice(2);
 	if(arguments.length){
-		qqwry.DBUG(false);
 		for(var ips = 0 ; ips < arguments.length ; ips ++){
 			var loc = qqwry.SearchIPLocation(arguments[ips]);
-			console.log(loc.Country + " " + loc.Area);
+			console.log(loc.Country + " " + loc.Area + " ("+loc.ip+")");
 		}
 		return ;
 	}
@@ -30,4 +29,4 @@ qqwry.info(function(){
 	}
 	var time2 = new Date()
 	console.log("查询完成总耗时: " + (time2 - time_b) + " 平均每条记录耗时:" + ((time2 - time_b)/n));
-},"dbug");
+});
