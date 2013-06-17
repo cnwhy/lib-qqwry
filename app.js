@@ -13,7 +13,7 @@ var qqwry = require('./index.js');
 //console.log(String.fromCharCode(0x20ac));
 
 var t_jz = new Date();
-qqwry.info("./data/qqwry.dat",function(){
+qqwry.info("./qqwry.dat",function(){
 	var arguments = process.argv.splice(2);
 	if(arguments.length){
 		var tt1 = new Date(),ttt;

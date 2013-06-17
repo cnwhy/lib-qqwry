@@ -16,7 +16,7 @@ var dbug = false,
 
 exports.DBUG = function(a){dbug=a;}
 exports.info = function(dataPath){
-	dataPath = typeof(dataPath) == "string" ? dataPath : (__dirname + "/data/qqwry.dat");
+	dataPath = typeof(dataPath) == "string" ? dataPath : (__dirname + "/qqwry.dat");
 	var callback = typeof arguments[arguments.length-1] == "function" ? arguments[arguments.length-1] : function(){};
 	ipFileBuffer = fs.readFileSync(dataPath);
 	ipBegin = ipFileBuffer.readUInt32LE(0,true);
