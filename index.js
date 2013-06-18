@@ -1,58 +1,56 @@
-var fs = require('fs')
-	//,EventEmitter = require("events").EventEmitter
-	//,util = require("util")
-	//,iconv = require('iconv-lite') //iconv.decode(, 'GBK');
-	,GBK = require("./gbk.js");
+var fs = require('fs'),
+	GBK = require("./gbk.js");
+	
 var IP_RECORD_LENGTH = 7,
 	REDIRECT_MODE_1 = 0x01,
 	REDIRECT_MODE_2 = 0x02,
 	//IP_REGEXP = /^((\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/,
 	IP_REGEXP1 = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/;
 	
-var dbug = false,
+var dbug = false,ipDataPath,
 	ipBegin,ipEnd,ipCount
 	ipFileBuffer=null,ipFmax=0,
 	unArea ="未知地区",unCountry = "未知国家";
 
 exports.DBUG = function(a){dbug=a;}
 exports.info = function(dataPath){
-	dataPath = typeof(dataPath) == "string" ? dataPath : (__dirname + "/qqwry.dat");
+	var Path = typeof(dataPath) == "string" ? dataPath : (__dirname + "/qqwry.dat");
 	var callback = typeof arguments[arguments.length-1] == "function" ? arguments[arguments.length-1] : function(){};
-	ipFileBuffer = fs.readFileSync(dataPath);
+	ipFileBuffer = fs.readFileSync(Path);
 	ipBegin = ipFileBuffer.readUInt32LE(0,true);
 	ipEnd = ipFileBuffer.readUInt32LE(4,true);
 	ipCount = (ipEnd-ipBegin)/7+1;
 	console.log("==== IP Server Start! ==== [Begin:"+ipBegin+" End:"+ipEnd + " Count:" + ipCount + "]");
-	callback.call(this);
+	callback();
 	return this;
 }
 
 //查询IP的地址信息
-exports.searchIPLocation = function(IP){
+exports.searchIP = function(IP){
 	//IP = "255.255.255.255";
 	var ip = this.ipToInt(IP),
 		g = LocateIP(ip),
 		loc={};
 	if(g == -1){return {"ip":IP,"Country":unArea,"Area":unCountry};}
 	var add = setIPLocation(g);
-	loc.ip = this.intToIp(ip);
+	loc.ip = this.intToIP(ip);
 	loc.Country = add.Country;
 	loc.Area = add.Area;
 	dbug && console.log(loc);
 	return loc;
 }
 
-//查询IP段的地址信息;
-exports.searchIPLocations = function(bginIP,endIP,callback){
+//查询IP段的地址信息;scope
+exports.searchIPScope = function(bginIP,endIP,callback){
 	var _bIP = this.ipToInt(bginIP)
 		,_endIP = this.ipToInt(endIP)
 		,b_g = LocateIP(_bIP)
-		,e_g = LocateIP(endIP)
+		,e_g = LocateIP(_endIP)
 		,ips = [];
 	for(var i = b_g; i<= e_g ; i+= IP_RECORD_LENGTH){
 		var loc = {},add = setIPLocation(i);
-		loc.begIP = this.intToIp(ipFileBuffer.readUInt32LE(i,true));
-		loc.endIP = this.intToIp(ipFileBuffer.readUInt32LE(setBuffer3(i+4),true));
+		loc.begIP = this.intToIP(ipFileBuffer.readUInt32LE(i,true));
+		loc.endIP = this.intToIP(ipFileBuffer.readUInt32LE(setBuffer3(i+4),true));
 		loc.Country = add.Country;
 		loc.Area = add.Area;
 		ips.push(loc);
@@ -79,36 +77,30 @@ exports.ipToInt = function(IP){
 }
 
 //int转ip地址
-exports.intToIp = function(INT){
+exports.intToIP = function(INT){
 	if(INT < 0 || INT > 0xFFFFFFFF){
 		throw ("The number is not normal!");
 	}
 	return (INT>>>24) + "." + (INT>>>16 & 0xFF) + "." + (INT>>>8 & 0xFF) + "." + (INT>>>0 & 0xFF);
 }
 
-exports.infoEmit = function(a,b){
-	var o = this;
-	setTimeout(function(){o.info(a,b)});
+exports.infoAsync = function(){
+	var o = this,args = arguments;
+	setTimeout(function(){o.info.apply(o,args)});
 	return this;
 }
 
-exports.emitSearchIPLocations = function(a,b,c){
+exports.searchIPScopeAsync = function(a,b,c){
 	var o = this;
-	setTimeout(function(){o.searchIPLocations(a,b,c)});
-	return this;
-}
-
-exports.info_e = function(a,b){
-	var o = this;
-	setTimeout(function(){o.info(a,b);});
+	setTimeout(function(){o.searchIPScope(a,b,c)});
 	return this;
 }
 
 //查找地址信息
 function setIPLocation(g){
 	var ipwz = setBuffer3(g+4) + 4; //2723489
-	var lx = ipFileBuffer.readUInt8(ipwz)
-		,loc={};
+	var lx = ipFileBuffer.readUInt8(ipwz),
+		loc={};
 	if(lx == REDIRECT_MODE_1){//Country，ipwz1 需要根据给定偏移处标识再判断
         ipwz = setBuffer3(ipwz+1); //读取国家偏移
 		lx = ipFileBuffer.readUInt8(ipwz); //再次获取标识字节
