@@ -1,6 +1,4 @@
-var fs = require('fs'),
-	GBK = require("./gbk.js");
-	
+var GBK = null;
 var IP_RECORD_LENGTH = 7,
 	REDIRECT_MODE_1 = 0x01,
 	REDIRECT_MODE_2 = 0x02,
@@ -14,8 +12,10 @@ var dbug = false,ipDataPath,
 
 exports.DBUG = function(a){dbug=a;}
 exports.info = function(dataPath){
-	var Path = typeof(dataPath) == "string" ? dataPath : (__dirname + "/qqwry.dat");
+	var fs = require('fs'),
+		Path = typeof(dataPath) == "string" ? dataPath : (__dirname + "/qqwry.dat");
 	var callback = typeof arguments[arguments.length-1] == "function" ? arguments[arguments.length-1] : function(){};
+	GBK = require("./gbk.js");
 	ipFileBuffer = fs.readFileSync(Path);
 	ipBegin = ipFileBuffer.readUInt32LE(0,true);
 	ipEnd = ipFileBuffer.readUInt32LE(4,true);
