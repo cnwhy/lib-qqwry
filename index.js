@@ -2,23 +2,23 @@ var GBK = null;
 var IP_RECORD_LENGTH = 7,
 	REDIRECT_MODE_1 = 0x01,
 	REDIRECT_MODE_2 = 0x02,
-	//IP_REGEXP = /^((\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/,
-	IP_REGEXP1 = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/;
+	IP_REGEXP = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/;
 	
-var dbug = false,ipDataPath,
+var dbug = false,
+	PathDefined = __dirname + "/qqwry.dat", //IP库默认路径
 	ipBegin,ipEnd,ipCount
-	ipFileBuffer=null,ipFmax=0,
+	ipFileBuffer = null,
 	unArea ="未知地区",unCountry = "未知国家";
 
 exports.DBUG = function(a){dbug=a;}
 exports.info = function(dataPath){
 	var fs = require('fs'),
-		Path = typeof(dataPath) == "string" ? dataPath : (__dirname + "/qqwry.dat");
+		Path = typeof(dataPath) == "string" ? dataPath : PathDefined;
 	var callback = typeof arguments[arguments.length-1] == "function" ? arguments[arguments.length-1] : function(){};
 	GBK = require("./gbk.js");
-	ipFileBuffer = fs.readFileSync(Path);
-	ipBegin = ipFileBuffer.readUInt32LE(0,true);
-	ipEnd = ipFileBuffer.readUInt32LE(4,true);
+	ipFileBuffer = fs.readFileSync(Path); //缓存IP库文件;
+	ipBegin = ipFileBuffer.readUInt32LE(0,true); //索引的开始位置;
+	ipEnd = ipFileBuffer.readUInt32LE(4,true); //索引的结束位置;
 	ipCount = (ipEnd-ipBegin)/7+1;
 	console.log("==== IP Server Start! ==== [Begin:"+ipBegin+" End:"+ipEnd + " Count:" + ipCount + "]");
 	callback();
@@ -27,7 +27,6 @@ exports.info = function(dataPath){
 
 //查询IP的地址信息
 exports.searchIP = function(IP){
-	//IP = "255.255.255.255";
 	var ip = this.ipToInt(IP),
 		g = LocateIP(ip),
 		loc={};
@@ -61,7 +60,7 @@ exports.searchIPScope = function(bginIP,endIP,callback){
 
 //ip地址转int
 exports.ipToInt = function(IP){
-	var result = IP_REGEXP1.exec(IP),ip;
+	var result = IP_REGEXP.exec(IP),ip;
 	if(result){
 		var ip_Arr = result.slice(1);
 		ip =(parseInt(ip_Arr[0]) << 24 
@@ -98,14 +97,14 @@ exports.searchIPScopeAsync = function(a,b,c){
 
 //查找地址信息
 function setIPLocation(g){
-	var ipwz = setBuffer3(g+4) + 4; //2723489
+	var ipwz = setBuffer3(g+4) + 4;
 	var lx = ipFileBuffer.readUInt8(ipwz),
 		loc={};
-	if(lx == REDIRECT_MODE_1){//Country，ipwz1 需要根据给定偏移处标识再判断
+	if(lx == REDIRECT_MODE_1){//Country根据标识再判断
         ipwz = setBuffer3(ipwz+1); //读取国家偏移
 		lx = ipFileBuffer.readUInt8(ipwz); //再次获取标识字节
 		var Gjbut;
-		if (lx == REDIRECT_MODE_2){ //再次检查标识字节
+		if (lx == REDIRECT_MODE_2){//再次检查标识字节
 			Gjbut = setIpFileString(setBuffer3(ipwz+1));
 			loc.Country = GBK.dc_GBK(Gjbut);
             ipwz = ipwz + 4;
@@ -115,7 +114,7 @@ function setIPLocation(g){
             ipwz += Gjbut.length + 1;
 		}
 		loc.Area = ReadArea(ipwz);
-	}else if(lx == REDIRECT_MODE_2){//Country直接读取偏移处字符串 Area根据标志再判断
+	}else if(lx == REDIRECT_MODE_2){//Country直接读取偏移处字符串
 		var Gjbut = setIpFileString(setBuffer3(ipwz+1));
 		loc.Country = GBK.dc_GBK(Gjbut);
 		loc.Area = ReadArea(ipwz + 4);
@@ -164,7 +163,6 @@ function setIpFileString(Begin){
 // 取得begin和end中间的偏移(用于2分法查询);
 function GetMiddleOffset(begin, end ,recordLength) {
 	var records = ( (end - begin) / recordLength >> 1 ) * recordLength + begin; 
-	//return records == begin ? records + recordLength : records;
 	return records ^ begin ? records : records + recordLength;
 }
 
@@ -187,8 +185,8 @@ function LocateIP(ip){
 		}
 	}
 	if(dbug){
-		endip = ipFileBuffer.readUInt32LE(setBuffer3(g+4),true); //再次验证查到的偏移处的结束IP段与ip比较；
-		if(ip>endip){
+		endip = ipFileBuffer.readUInt32LE(setBuffer3(g+4),true); //获取结束IP的值
+		if(ip>endip){//与结束IP比较；
 			return -1;
 		}
 	}
