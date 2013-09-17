@@ -1,9 +1,9 @@
-var qqwry = require('./index.js').info();
+Ôªøvar qqwry = require('./index.js').info();
 
 var ip1 = qqwry.searchIP("0.0.255.0"),
 	ip2 = qqwry.searchIP(0xFFFFFF00);
 	ip3 = qqwry.searchIPScope("8.8.8.0","8.8.8.9");
-//“Ï≤ΩIP∂Œ≤È—Ø£ª
+//ÂºÇÊ≠•IPÊÆµÊü•ËØ¢Ôºõ
 qqwry.searchIPScopeAsync("8.8.8.0","8.8.8.8",function(a){
 	console.log(a);
 });
@@ -12,7 +12,7 @@ console.log(ip2);
 console.log(ip3);
 console.log("-----end-----");
 
-//“Ï≤Ω≥ı ºªØµÙ”√
+//ÂºÇÊ≠•ÂàùÂßãÂåñË∞ÉÁî®
 // qqwry.infoAsync(function(){
 	// console.log(qqwry.searchIPLocation("255.255.255.255"));
 	// console.log(qqwry.searchIPLocation(0xFFFFFF00));
