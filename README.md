@@ -2,11 +2,11 @@ lib-qqwry
 =====
 
 lib-qqwry是一个高效查询纯真IP库(qqwry.dat)的模块;  
-为更好的字符转化效率,未使用iconv模块,直接使用gbk编码表文件。  
+为更好的转化效率,抛弃了iconv-lite模块,直接使用gbk编码表文件。  
 经过不断优化，相同环境下，单次查询速度从最初的0.6毫秒提升到现在的0.004毫秒;  
 
 ### 实现的功能
-1.通过IP地址/或有效的IP数值,搜索IP地址对应的地理位置信息。  
+1.通过 IP地址/或有效的IP数值 搜索IP地址的地理位置。  
 2.搜索一个IP段的地理位置信息。  
 3.IP地址与数值的互转。  
 
@@ -17,14 +17,12 @@ npm install lib-qqwry
 
 ### 调用方法
 <pre>
-var qqwry = require('lib-qqwry').info(); //调用并初始化，普通机器初始需要70毫秒左右;
+var qqwry = require('lib-qqwry').info(); //调用并初始化，不在乎70毫秒左右初始化时间，完全可以这样调用;
 var ipL = qqwry.searchIP("202.103.102.10"); //查询IP信息
 var ipLA = qqwry.searchIPScope("0.0.0.0","1.0.0.0");  //查询IP段信息
 </pre>
 
 ## API
-标明的"静态方法"可以值接使用,无需初始化.  
-初使化操作会将GBK编码表,IP库加载到内存中,以提高后续的查询效率,大概占用12M左右的内存.
 
 ### info(dataPath,callback) IP库初始化
 dataPath : IP库路径,可选; //默认路径为主文件同目录下(__dirname + "/qqwry.dat");   
@@ -45,7 +43,7 @@ qqwry.info(function(){
 info()的异步方法；
 初始化需要70毫秒，以及占用9MB左右的内存，项目资源紧张可以异步初始化。
 
-### searchIP(IP) 单个IP查询
+### SearchIP(IP) 单个IP查询
 IP : IP地址  
 反回一个JSON对像;  
 <pre>
@@ -74,39 +72,21 @@ endIP : 结束IP
 ### searchIPScopeAsync(beginIP,endIP,callback) IP段查询的异步方法
 searchIPScope() 的异步方法,查询结果会以第一个参数的形式传给回调函数;  
 
-
-### DBUG(Bool) 调试模式开关,默认未启用
-DUBG模式会在控制台输出查询的关键信息,方便定位错误;
-注:不管是否启用Little Endian,调试信息中的数值都是Big endian;
-<pre>
-var qqwry = require('lib-qqwry').DBUG().info(); //开启调试模式并初始化
-qqrry.DBUG(false); //关闭调试模式;
-</pre>
-
-### ipToInt(IP) IP地址转数值(静态方法)
+### ipToInt(IP) IP地址转数值
 <pre>
 > qqwry.ipToInt("255.255.255.255")
 4294967295
 </pre>
 
-### intToIP(INT) 数值转IP地址(静态方法)
+### intToIP(INT) 数值转IP地址
 <pre>
 > qqwry.intToIP(4294967295)
 '255.255.255.255'
 </pre>
 
-### ipEndianChange(INT) 字节序转换(静态方法)
-按32位转换参数的字节序  
-一些云平台的环境变量中IP信息可能是Little-Endian形式的数值;  
-比如百度node.js环境中的 `process.env.BAE_ENV_COOKIE_IP` , 这时候就有用了;
-<pre>
-> qqwry.ipEndianChange(0x010000FF)
-4278190081 //0xFF000001
-</pre>
-
 ## 文档说明
 1. index.js 解析IP库的主文件;
-2. gbk.js 	GBK编码表文件,从[iconv-lite](https://github.com/ashtuchkin/iconv-lite)中找出来的,并增加了一个转码方法;
+2. gbk.js 	GBK编码表文件,从(iconv-lite)中提取出来的,只增加了一个转码方法;
 3. test.js	调用演示;
 4. test_v.js 效率测试示例;
 5. qqwry.dat 纯真IP库,可用最新IP库替换;
