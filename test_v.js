@@ -1,17 +1,18 @@
 var t = new Date();
-var qqwry = require('./index.js');
+var qqwry = require('./index.js').DBUG();//加载lib-qqwry并开启DBUG模式;
 var t_jz = new Date();
 
 qqwry.info("./qqwry.dat",function(){
-	qqwry.DBUG(false);
 	var arg = process.argv[2],
 		t1 = new Date(),n;
 	console.log("加载js:" + (t_jz - t) + " 初始化:" + (t1-t));
 	if(arg == "-1"){
+		qqwry.DBUG(false);//关闭DEBUG模式;
 		n = v1(10000);
 		var t2 = new Date();
 		console.log("单次查询("+(n/10000)+"万次):"+ (t2-t1) + " 平均:" + (t2-t1)/n );
 	}else if(arg == "-2"){
+		qqwry.DBUG(false);//关闭DEBUG模式;
 		n = v2();
 		var t2 = new Date();
 		console.log("IP段查询"+n[0]+"次(共获取"+(n[1]/10000)+"万条记录):"+ (t2-t1) + " 平均:" + (t2-t1)/n[1] );
