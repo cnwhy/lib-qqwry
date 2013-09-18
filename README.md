@@ -77,7 +77,6 @@ searchIPScope() 的异步方法,查询结果会以第一个参数的形式传给
 
 ### DBUG(Bool) 调试模式开关,默认未启用
 DUBG模式会在控制台输出查询的关键信息,方便定位错误;
-注:不管是否启用Little Endian,调试信息中的数值都是Big endian;
 <pre>
 var qqwry = require('lib-qqwry').DBUG().info(); //开启调试模式并初始化
 qqrry.DBUG(false); //关闭调试模式;
