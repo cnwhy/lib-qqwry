@@ -1,4 +1,4 @@
-lib-qqwry
+lib-qqwry  (轻量级版本开发分支)
 =====
 
 lib-qqwry是一个高效查询纯真IP库(qqwry.dat)的模块;  
@@ -6,44 +6,31 @@ lib-qqwry是一个高效查询纯真IP库(qqwry.dat)的模块;
 经过不断优化，相同环境下，单次查询速度从最初的0.6毫秒提升到现在的0.004毫秒;  
 
 ### 实现的功能
-1.通过IP地址或有效的IP数值,搜索IP地址对应的地理位置信息。  
-2.搜索一个IP段的地理位置信息。  
-3.IP地址与数值的互转。  
+1. 通过IP地址或有效的IP数值,搜索IP地址对应的地理位置信息。  
+2. 搜索一个IP段的地理位置信息。  
+3. IP地址与数值的互转。
+
+### 关于轻量级版本
+1. 本分支增加了一个配置文件.
+2. 不再需要初始化方法(并未取消info方法)在调用查询时,首先自动判断并执行初始化.
+3. 程序内不再抛出错误.
+4. 空闲指定时间后,程序自动清理占用的内存.
 
 ### npm安装
+轻量级版不会发布到npm,请自行下载或用Git安装
 <pre>
-npm install lib-qqwry
+
 </pre>
+
 
 ### 调用方法
 <pre>
-var qqwry = require('lib-qqwry').info(); //调用并初始化，普通机器初始需要70毫秒左右;
+var qqwry = require('lib-qqwry'); //调用lib-qqwry ;
 var ipL = qqwry.searchIP("202.103.102.10"); //查询IP信息
 var ipLA = qqwry.searchIPScope("0.0.0.0","1.0.0.0");  //查询IP段信息
 </pre>
 
 ## API
-标明的"静态方法"可以值接使用,无需初始化.  
-初使化操作会将GBK编码表,IP库加载到内存中,以提高后续的查询效率,大概占用12M左右的内存.
-
-### info(dataPath,callback) IP库初始化
-dataPath : IP库路径,可选; //默认路径为主文件同目录下(__dirname + "/qqwry.dat");   
-callback : 回调函数 //可在此时调用查询函数  
-
-<pre>
-//你可以这样
-qqwry.info();
-var ipL = qqwry.searchIP("202.103.102.10");
-
-//也可以这样初始化,推荐;
-qqwry.info(function(){
-	var ipL = qqwry.searchIP("202.103.102.10");
-});
-</pre>
-
-### infoAsync(dataPath,callback) IP库初始化的异步方法
-info()的异步方法；
-初始化需要70毫秒，以及占用9MB左右的内存，项目资源紧张可以异步初始化。
 
 ### searchIP(IP) 单个IP查询
 IP : IP地址  
@@ -82,19 +69,19 @@ var qqwry = require('lib-qqwry').DBUG().info(); //开启调试模式并初始化
 qqrry.DBUG(false); //关闭调试模式;
 </pre>
 
-### ipToInt(IP) IP地址转数值(静态方法)
+### ipToInt(IP) IP地址转数值
 <pre>
 > qqwry.ipToInt("255.255.255.255")
 4294967295
 </pre>
 
-### intToIP(INT) 数值转IP地址(静态方法)
+### intToIP(INT) 数值转IP地址
 <pre>
 > qqwry.intToIP(4294967295)
 '255.255.255.255'
 </pre>
 
-### ipEndianChange(INT) 字节序转换(静态方法)
+### ipEndianChange(INT) 字节序转换
 按32位转换参数的字节序  
 一些云平台的环境变量中IP信息可能是Little-Endian形式的数值;  
 比如百度node.js环境中的 `process.env.BAE_ENV_COOKIE_IP` , 这时候就有用了;

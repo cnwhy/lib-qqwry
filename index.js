@@ -2,11 +2,12 @@ var GBK = null;
 var IP_RECORD_LENGTH = 7,
 	REDIRECT_MODE_1 = 0x01,
 	REDIRECT_MODE_2 = 0x02,
+	AUTO_CLEAL_TIME = 18000000, //缓存30分钟
 	IP_REGEXP = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/;
 var dbug = false,log = console.log,
 	pathDefined = __dirname + "/qqwry.dat", //IP库默认路径
 	ipBegin,ipEnd,ipCount,
-	ipFileBuffer = null,uninfo = true,
+	ipFileBuffer = null,OUT_Lin,
 	unArea ="未知地区",unCountry = "未知国家";
 
 exports.DBUG = function(a){dbug = a != undefined ? a : true; return this;}
@@ -27,7 +28,7 @@ exports.info = function(dataPath){
 
 //查询IP的地址信息
 exports.searchIP = function(IP){
-	uninfo && uninfo();
+	autoInfo();
 	var ip = this.ipToInt(IP),
 		g = LocateIP(ip),
 		loc={};
@@ -37,12 +38,13 @@ exports.searchIP = function(IP){
 	loc.Country = add.Country;
 	loc.Area = add.Area;
 	dbug && log(loc);
+	autoClear();
 	return loc;
 }
 
 //查询IP段的地址信息;scope
 exports.searchIPScope = function(bginIP,endIP,callback){
-	uninfo && uninfo();
+	autoInfo();
 	var _ip1,_ip2,b_g,e_g,ips=[];
 	try{_ip1 = this.ipToInt(bginIP);}catch(e){throw ("The bginIP is not normal! >> " + bginIP);}
 	try{_ip2 = this.ipToInt(endIP);}catch(e){throw ("The endIP is not normal! >> " + endIP);}
@@ -57,6 +59,7 @@ exports.searchIPScope = function(bginIP,endIP,callback){
 		ips.push(loc);
 	}
 	if(typeof callback === "function"){callback(ips);}
+	autoClear();
 	return ips;
 }
 
@@ -102,6 +105,21 @@ exports.searchIPScopeAsync = function(a,b,c){
 	setTimeout(function(){o.searchIPScope(a,b,c)});
 	return this;
 }
+
+exports.clear = function(){
+	GBK = null;
+	ipFileBuffer = null;
+}
+
+function autoClear(){
+	OUT_Lin = setTimeout(function(){exports.clear()},18000000)
+}
+
+function autoInfo(){
+	clearTimeout(OUT_Lin);
+	if(ipFileBuffer == null){exports.info();}
+}
+
 
 //查找地址信息
 function setIPLocation(g){
@@ -202,9 +220,4 @@ function LocateIP(ip){
 		}
 	}
 	return g;
-}
-
-//未初始化
-function uninfo(){
-	throw ("The lib-qqwry is Uninitialized!");
 }
