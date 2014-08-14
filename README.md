@@ -30,20 +30,20 @@ var ipLA = qqwry.searchIPScope("0.0.0.0","1.0.0.0");  //查询IP段信息
 dataPath : IP库路径,可选; //默认路径为主文件同目录下(__dirname + "/qqwry.dat");   
 callback : 回调函数 //可在此时调用查询函数  
 
+### infoAsync(dataPath,callback) IP库初始化的异步方法
+info()的异步方法；
+初始化需要70毫秒，以及占用9MB左右的内存，项目资源紧张可以异步初始化。
+
 <pre>
 //你可以这样
 qqwry.info();
 var ipL = qqwry.searchIP("202.103.102.10");
 
 //也可以这样初始化,推荐;
-qqwry.info(function(){
+qqwry.infoAsync(function(){
 	var ipL = qqwry.searchIP("202.103.102.10");
 });
 </pre>
-
-### infoAsync(dataPath,callback) IP库初始化的异步方法
-info()的异步方法；
-初始化需要70毫秒，以及占用9MB左右的内存，项目资源紧张可以异步初始化。
 
 ### searchIP(IP) 单个IP查询
 IP : IP地址  
@@ -104,16 +104,16 @@ qqrry.DBUG(false); //关闭调试模式;
 </pre>
 
 ## 文档说明
-1. index.js 解析IP库的主文件;
-2. gbk.js 	GBK编码表文件,从[iconv-lite](https://github.com/ashtuchkin/iconv-lite)中找出来的,并增加了一个转码方法;
-3. test.js	调用演示;
-4. test_v.js 效率测试示例;
-5. qqwry.dat 纯真IP库,可用最新IP库替换;
+1. ./data/qqwry.dat  默认IP库,可用最新IP库替换; 下载地址[www.cz88.net](http://www.cz88.net/)
+2. ./lib/qqwry.js  解析IP库的主文件;
+3. ./lib/gbk.js  GBK编码表文件,从[iconv-lite](https://github.com/ashtuchkin/iconv-lite)中找出来的,并增加了一个转码方法;
+4. ./test/test.js  使用演示;
+5. ./test/test_v.js  效率测试示例;
 
 ### 效率测试文件 test_v.js
 `node test_v.js 255.255.255.255` 正常工作检查  
-`node test_v.js -1` 单个查询效率测试  
-`node test_v.js -2` IP段查询效率测试  
+`node test_v.js -1` 单个查询效率测试
+`node test_v.js -2` 10次IP段查询效率测试  
 
 ##作者
 [含浪](http://www.cnblogs.com/whyoop)   w.why@163.com
