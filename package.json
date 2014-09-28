@@ -1,0 +1,22 @@
+{
+  "name": "lib-qqwry",
+  "version": "0.0.5",
+  "description": "Using NodeJS analytical IP Library (qqwry.dat) module.",
+  "main": "index.js",
+  "scripts": {
+    "test": "./test/test_v.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cnwhy/lib-qqwry.git"
+  },
+  "keywords": [
+    "qqwry",
+    "纯真IP库",
+    "IP地址"
+  ],
+  "author": {
+    "name": "cnwhy"
+  },
+  "license": "BSD"
+}
