@@ -34,9 +34,6 @@ callback : 回调函数 //可在此时调用查询函数
 info()的异步方法；
 初始化需要70毫秒，以及占用9MB左右的内存，项目资源紧张可以异步初始化。
 
-### unInfo(dataPath,callback) 释放初始化后占用的资源  
-info()的逆方法
-
 <pre>
 //你可以这样
 qqwry.info();
@@ -47,6 +44,9 @@ qqwry.infoAsync(function(){
 	var ipL = qqwry.searchIP("202.103.102.10");
 });
 </pre>
+
+### unInfo(dataPath,callback) 释放初始化后占用的资源  
+info()的逆方法
 
 ### searchIP(IP) 单个IP查询
 IP : IP地址  
