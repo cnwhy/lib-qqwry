@@ -45,7 +45,7 @@ qqwry.infoAsync(function(){
 });
 </pre>
 
-### unInfo(dataPath,callback) 释放初始化后占用的资源  
+### unInfo() 释放初始化后占用的资源  
 info()的逆方法
 
 ### searchIP(IP) 单个IP查询
