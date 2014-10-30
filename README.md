@@ -26,8 +26,8 @@ var ipLA = qqwry.searchIPScope("0.0.0.0","1.0.0.0");  //查询IP段信息
 标明的"静态方法"可以值接使用,无需初始化.  
 初使化操作会将GBK编码表,IP库加载到内存中,以提高后续的查询效率,大概占用12M左右的内存.
 
-### info(dataPath,callback) IP库初始化
-dataPath : IP库路径,可选; //默认路径为主文件同目录下(__dirname + "/qqwry.dat");   
+### info(dataPath) IP库初始化
+dataPath : IP库路径,可选; //默认路径为data文件夹中(__dirname + "/data/qqwry.dat");   
 callback : 回调函数 //可在此时调用查询函数  
 
 ### infoAsync(dataPath,callback) IP库初始化的异步方法
@@ -49,7 +49,7 @@ qqwry.infoAsync(function(){
 info()的逆方法
 
 ### searchIP(IP) 单个IP查询
-IP : IP地址  
+IP : IP地址/IP数值
 反回一个JSON对像;  
 <pre>
 > qqwry.searchIP("255.255.255.255");
