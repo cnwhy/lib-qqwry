@@ -1,15 +1,19 @@
-﻿var qqwry = require('../index.js').info();
+﻿var Qqwry = require('../index.js');
+
+qqwry = new Qqwry();
 
 var ip1 = qqwry.searchIP("0.0.255.0"),
 	ip2 = qqwry.searchIP(0xFFFFFF00);
-	ip3 = qqwry.searchIPScope("8.8.8.0","8.8.8.9");
+	ips = qqwry.searchIPScope("8.8.8.0","8.8.8.9"); //IP 段查询
 //异步IP段查询；
-qqwry.searchIPScopeAsync("8.8.8.0","8.8.8.8",function(a){
-	console.log(a);
+qqwry.searchIPScope("8.8.8.0","8.8.8.8",function(err,iparr){
+	if(err) return console.error(err);
+	console.log(iparr);
 });
+
 console.log(ip1);
 console.log(ip2);
-console.log(ip3);
+console.log(ips);
 console.log("-----end-----");
 
 //异步初始化调用

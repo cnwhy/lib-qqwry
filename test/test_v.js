@@ -1,30 +1,75 @@
-var t = new Date();
-var qqwry = require('../index.js').DBUG();//加载lib-qqwry并开启DBUG模式;
-var t_jz = new Date();
+var libqqwry = require('../');
+var qqwry1 = new libqqwry();
+var qqwry2 = new libqqwry();
+var arg = process.argv[2];
 
-qqwry.info("../data/qqwry.dat",function(){
-	var arg = process.argv[2],
-		t1 = new Date(),n;
-	console.log("加载js:" + (t_jz - t) + " 初始化:" + (t1-t));
-	if(arg == "-1"){
-		qqwry.DBUG(false);//关闭DEBUG模式;
-		n = v1(10000);
-		var t2 = new Date();
-		console.log("单次查询("+(n/10000)+"万次):"+ (t2-t1) + " 平均:" + (t2-t1)/n );
-	}else if(arg == "-2"){
-		qqwry.DBUG(false);//关闭DEBUG模式;
-		n = v2();
-		var t2 = new Date();
-		console.log("IP段查询"+n[0]+"次(共获取"+(n[1]/10000)+"万条记录):"+ (t2-t1) + " 平均:" + (t2-t1)/n[1] );
-	}else{//验证是否正常
-		var loc = qqwry.searchIP(arg || "255.255.255.255");
-		console.log(loc.ip + " -> " + loc.Country + " | " + loc.Area);	
-		return;
-	}
-});
+function openspeed(){
+	qqwry1.speed();
+	console.log('- 开启speed -')
+}
+
+if(arg == "-1"){
+	console.log('--- 效率测试 IP查询(searchIP) ---')
+	var tb,te,nn;
+	
+	tb = new Date();
+	nn = v1(10000,qqwry1);
+	te = new Date();
+	console.log("单次查询("+(nn/10000)+"万次):"+ (te-tb) + " 平均:" + (te-tb)/nn , " -- 启用 speed");
+
+	openspeed();
+
+	tb = new Date();
+	nn = v1(10000,qqwry1);
+	te = new Date();
+	console.log("单次查询("+(nn/10000)+"万次):"+ (te-tb) + " 平均:" + (te-tb)/nn);
+
+}else if(arg == "-2"){
+	console.log('--- 效率测试 IP段查询(searchIPScope) ---')
+	var tb,te,n;
+
+	tb = new Date();
+	n = v2(null,qqwry1);
+	te = new Date();
+	console.log("IP段查询"+n[0]+"次(共获取"+(n[1]/10000)+"万条记录):"+ (te-tb) + " 平均:" + (te-tb)/n[1]);
+
+	openspeed();
+
+	tb = new Date();
+	n = v2(null,qqwry1);
+	te = new Date();
+	console.log("IP段查询"+n[0]+"次(共获取"+(n[1]/10000)+"万条记录):"+ (te-tb) + " 平均:" + (te-tb)/n[1] );
+
+}else if(arg == "-3"){
+	console.log('--- 效率测试 IP段异步查询(searchIPScope) ---')
+	var tb,te,n;
+
+	tb = new Date();
+	qqwry1.searchIPScope("0.0.0.0","255.255.255.255",function(err,iparr){
+		te = new Date();
+		n = iparr.length;
+		console.log("IP段异步查询(共获取"+(n/10000)+"万条记录):"+ (te-tb) + " 平均:" + (te-tb)/n);
+		
+		openspeed();
+		
+		tb = new Date();
+		qqwry1.searchIPScope("0.0.0.0","255.255.255.255",function(err,iparr){
+			te = new Date();
+			n = iparr.length;
+			console.log("IP段异步查询(共获取"+(n/10000)+"万条记录):"+ (te-tb) + " 平均:" + (te-tb)/n);	
+		});
+	});
+
+}else{//验证是否正常
+	var loc = qqwry1.searchIP(arg || "255.255.255.255");
+	var loc1 = qqwry2.searchIP(arg || "255.255.255.255");
+	console.log(loc.ip + " -> " + loc.Country + " | " + loc.Area);	
+	console.log(loc1.ip + " -> " + loc1.Country + " | " + loc1.Area);	
+	return;
+}
 
 //单个IP查询
-function v1(n){
+function v1(n,qqwry){
 	var nb=0;
 	for(var i = 0 ; i<n; i++){
 		qqwry.searchIP("202.103.102.10");
@@ -53,7 +98,7 @@ function v1(n){
 }
 
 //IP段查询
-function v2(n){
+function v2(n,qqwry){
 	var nb = 0,k = n || 1;
 	for(var i = 0 ; i<k; i++){
 		nb += qqwry.searchIPScope("0.0.0.0","0.255.255.255").length;
@@ -69,3 +114,6 @@ function v2(n){
 	}
 	return [k*10,nb];
 }
+
+
+
