@@ -1,6 +1,6 @@
 ﻿var Qqwry = require('../index.js');
 
-qqwry = new Qqwry();
+qqwry = Qqwry.init(); // Qqwry.init() <=> Qqwry()
 
 var ip1 = qqwry.searchIP("0.0.255.0"),
 	ip2 = qqwry.searchIP(0xFFFFFF00);
