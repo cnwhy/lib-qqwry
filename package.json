@@ -1,10 +1,6 @@
 {
   "name": "lib-qqwry",
-<<<<<<< HEAD
   "version": "1.0.0",
-=======
-  "version": "0.0.6",
->>>>>>> master
   "description": "Using NodeJS analytical IP Library (qqwry.dat) module.",
   "main": "index.js",
   "scripts": {
