@@ -1,4 +1,4 @@
-lib-qqwry
+#lib-qqwry
 =====
 
 lib-qqwry是一个高效查询纯真IP库(qqwry.dat)的模块;  
@@ -30,18 +30,17 @@ qqwry.searchIPScope("0.0.0.0","1.0.0.0",function(err,iparr){
 ```
 
 ## API
-标明的"静态方法"可以值接使用,无需初始化.  
-初使化操作会将GBK编码表,IP库加载到内存中,以提高后续的查询效率,大概占用12M左右的内存.
+-----------------------------------  
 
 ### .ipToInt(IP) IP地址转数值
 ```
-> qqwry.ipToInt("255.255.255.255")
+> libqqwry.ipToInt("255.255.255.255")
 4294967295
 ```
 
 ### .intToIP(INT) 数值转IP地址
 ```
-> qqwry.intToIP(4294967295)
+> libqqwry.intToIP(4294967295)
 '255.255.255.255'
 ```
 
@@ -50,7 +49,7 @@ qqwry.searchIPScope("0.0.0.0","1.0.0.0",function(err,iparr){
 一些云平台的环境变量中IP信息可能是Little-Endian形式的数值;  
 比如百度node.js环境中的 `process.env.BAE_ENV_COOKIE_IP` , 这时候就有用了;
 ```
-> qqwry.ipEndianChange(0x010000FF)
+> libqqwry.ipEndianChange(0x010000FF)
 4278190081 //0xFF000001
 ```
 
