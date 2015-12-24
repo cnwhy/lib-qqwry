@@ -1,5 +1,4 @@
 #lib-qqwry
-=====
 
 lib-qqwry是一个高效查询纯真IP库(qqwry.dat)的模块;  
 为更好的字符转化效率,未使用iconv模块,直接使用gbk编码表文件。  
@@ -30,7 +29,6 @@ qqwry.searchIPScope("0.0.0.0","1.0.0.0",function(err,iparr){
 ```
 
 ## API
------------------------------------  
 
 ### .ipToInt(IP) IP地址转数值
 ```
