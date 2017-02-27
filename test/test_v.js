@@ -28,7 +28,7 @@ if(arg == "-1"){
 	tb = new Date();
 	nn = v1(1000,qqwry1);
 	te = new Date();
-	console.log("单次查询("+(nn/10000)+"万次):"+ (te-tb) + "ms 平均:" + (te-tb)/nn , " -- 启用 speed");
+	console.log("单次查询("+(nn/10000)+"万次):"+ (te-tb) + "ms 平均:" + (te-tb)/nn);
 
 	openspeed();
 
@@ -75,7 +75,10 @@ if(arg == "-1"){
 
 }else{//验证是否正常
 	var loc = qqwry1.searchIP(arg || "255.255.255.255");
-	console.log(loc);	
+	console.log(loc);
+	openspeed();
+	var data = qqwry1.searchIPScope("0.0.0.0","255.255.255.255");
+	console.log("共有数据: " + (data.length/10000) + "万条");
 	return;
 }
 

@@ -4,7 +4,7 @@
   "description": "Using NodeJS analytical IP Library (qqwry.dat) module.",
   "main": "index.js",
   "scripts": {
-    "test": "./test/test_v.js"
+    "test": "node ./test/test_v.js"
   },
   "repository": {
     "type": "git",
