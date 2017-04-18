@@ -1,4 +1,4 @@
-#lib-qqwry
+# lib-qqwry
 
 lib-qqwry是一个高效查询纯真IP库(qqwry.dat)的模块;  
 为更好的字符转化效率,未使用iconv模块,直接使用gbk编码表文件。  
@@ -110,7 +110,7 @@ callback: 回调函数,不传则为同步查询 function(err,arrdata){};
 `node test_v.js -2` 10次IP段查询效率测试  
 `node test_v.js -3` 10次IP段异步查询效率测试  
 
-##作者
+## 作者
 [含浪](http://www.cnblogs.com/whyoop)   w.why@163.com
 
 
