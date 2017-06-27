@@ -1,15 +1,13 @@
 # lib-qqwry
 
-lib-qqwry是一个高效查询纯真IP库(qqwry.dat)的模块;  
-为更好的字符转化效率,未使用iconv模块,直接使用gbk编码表文件。  
-经过不断优化，相同环境下，单次查询速度从最初的0.6毫秒提升到现在的0.004毫秒;  
+`lib-qqwry`是一个高效查询纯真IP库(qqwry.dat)的模块;  
 
 ### 实现的功能
-1.通过IP地址或有效的IP数值,搜索IP地址对应的地理位置信息。  
-2.搜索一个IP段的地理位置信息。  
-3.IP地址与数值的互转。  
+1. 通过IP地址或有效的IP数值,搜索IP地址对应的地理位置信息。  
+2. 搜索一个IP段的地理位置信息。  
+3. IP地址与数值的互转。  
 
-### npm安装
+### 安装
 ```
 npm install lib-qqwry
 ```
@@ -18,8 +16,8 @@ npm install lib-qqwry
 
 ```js
 var libqqwry = require('lib-qqwry');
-var qqwry = libqqwry.init();
-qqwry.speed(); //启用急速模式 比不开启效率率快非常多 但多占10M左右内存;
+var qqwry = libqqwry.init() //初始化IP库解析器
+    .qqwry.speed(); //启用急速模式 比不开启效率率快非常多 但多占10M左右内存;
 var ip1 = qqwry.searchIP("202.103.102.10"); //查询IP信息
 var ips = qqwry.searchIPScope("0.0.0.0","1.0.0.0");  //查询IP段信息
 //异步查询IP段信息
@@ -44,8 +42,8 @@ qqwry.searchIPScope("0.0.0.0","1.0.0.0",function(err,iparr){
 
 ### .ipEndianChange(INT) 字节序转换
 按32位转换参数的字节序  
-一些云平台的环境变量中IP信息可能是Little-Endian形式的数值;  
-比如百度node.js环境中的 `process.env.BAE_ENV_COOKIE_IP` , 这时候就有用了;
+一些云平台的环境变量中IP信息可能是Little-Endian形式的数值; 
+
 ```
 > libqqwry.ipEndianChange(0x010000FF)
 4278190081 //0xFF000001
@@ -93,7 +91,7 @@ callback: 回调函数,不传则为同步查询 function(err,arrdata){};
 ```
 
 ### qqwry.speed() 启用急速模式
-急速模式实质为将IP库文件读入内存中, 普通模式特别是HDD硬盘环境快50倍以上.
+急速模式实质为将IP库文件读入内存中以提升效率, 是普通模式特别是HDD硬盘环境快50倍以上.
 
 ### qqwry.unSpeed() 停用急速模式
 
@@ -109,8 +107,3 @@ callback: 回调函数,不传则为同步查询 function(err,arrdata){};
 `node test_v.js -1` 单个查询效率测试  
 `node test_v.js -2` 10次IP段查询效率测试  
 `node test_v.js -3` 10次IP段异步查询效率测试  
-
-## 作者
-[含浪](http://www.cnblogs.com/whyoop)   w.why@163.com
-
-
