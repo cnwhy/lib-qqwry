@@ -5,7 +5,7 @@ var arg = process.argv[2];
 
 function openspeed(){
 	qqwry1.speed();
-	console.log('- 开启speed -')
+	console.log('- 开启speed模式 -')
 }
 
 var ips = [],ipds=[];
@@ -73,12 +73,17 @@ if(arg == "-1"){
 		});
 	});
 
-}else{//验证是否正常
-	var loc = qqwry1.searchIP(arg || "255.255.255.255");
-	console.log(loc);
-	openspeed();
-	var data = qqwry1.searchIPScope("0.0.0.0","255.255.255.255");
-	console.log("共有数据: " + (data.length/10000) + "万条");
+}else if(arg){//验证是否正常
+	console.log(qqwry1.searchIP(arg));
+}else{
+	qqwry1.speed();
+	var ips = ['0.0.0.0','255.255.255.255']
+	var time1 = Date.now();
+	var data = qqwry1.searchIPScope.apply(qqwry1,ips);
+	var time2 = Date.now();
+	var version = data[data.length-1]
+	console.log(version.Country + version.Area);
+	console.log(ips.join(' - ') + " | 共有数据:" + (data.length) + "条" , "查询耗时:" + (time2 - time1));
 	return;
 }
 
