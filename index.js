@@ -1,2 +1,2 @@
-﻿var qqwry = require('./lib/qqwry_v1.x.js')
+﻿var qqwry = require('./lib/qqwry.js')
 module.exports = qqwry;

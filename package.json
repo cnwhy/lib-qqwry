@@ -18,5 +18,8 @@
   "author": {
     "name": "cnwhy"
   },
-  "license": "BSD"
+  "license": "BSD",
+  "dependencies": {
+    "gbk.js": "^0.2.0"
+  }
 }

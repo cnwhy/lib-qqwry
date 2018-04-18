@@ -3,6 +3,10 @@ var qqwry1 = libqqwry();
 var qqwry2 = libqqwry.init();
 var arg = process.argv[2];
 
+function getQPS(n,s){
+	return "QPS: " + Math.round(n/s*1000/1024) + "k";
+}
+
 function openspeed(){
 	qqwry1.speed();
 	console.log('- 开启speed模式 -')
@@ -28,14 +32,14 @@ if(arg == "-1"){
 	tb = new Date();
 	nn = v1(1000,qqwry1);
 	te = new Date();
-	console.log("单次查询("+(nn/10000)+"万次):"+ (te-tb) + "ms 平均:" + (te-tb)/nn);
+	console.log("单次查询("+(nn/10000)+"万次):"+ (te-tb) + "ms - " + getQPS(nn,te-tb));
 
 	openspeed();
 
 	tb = new Date();
 	nn = v1(1000,qqwry1);
 	te = new Date();
-	console.log("单次查询("+(nn/10000)+"万次):"+ (te-tb) + "ms 平均:" + (te-tb)/nn);
+	console.log("单次查询("+(nn/10000)+"万次):"+ (te-tb) + "ms - " + getQPS(nn,te-tb));
 
 }else if(arg == "-2"){
 	console.log('--- 效率测试 IP段查询(searchIPScope) ---')
@@ -44,14 +48,14 @@ if(arg == "-1"){
 	tb = new Date();
 	n = v2(null,qqwry1);
 	te = new Date();
-	console.log("IP段查询"+n[0]+"次(共获取"+(n[1]/10000)+"万条记录):"+ (te-tb) + "ms 平均:" + (te-tb)/n[1]);
+	console.log("IP段查询"+n[0]+"次(共获取"+(n[1]/10000)+"万条记录):"+ (te-tb) + "ms - " + getQPS(n[1],te-tb))
 
 	openspeed();
 
 	tb = new Date();
 	n = v2(null,qqwry1);
 	te = new Date();
-	console.log("IP段查询"+n[0]+"次(共获取"+(n[1]/10000)+"万条记录):"+ (te-tb) + "ms 平均:" + (te-tb)/n[1] );
+	console.log("IP段查询"+n[0]+"次(共获取"+(n[1]/10000)+"万条记录):"+ (te-tb) + "ms - " + getQPS(n[1],te-tb))
 
 }else if(arg == "-3"){
 	console.log('--- 效率测试 IP段异步查询(searchIPScope) ---')
@@ -61,7 +65,7 @@ if(arg == "-1"){
 	qqwry1.searchIPScope("0.0.0.0","255.255.255.255",function(err,iparr){
 		te = new Date();
 		n = iparr.length;
-		console.log("IP段异步查询(共获取"+(n/10000)+"万条记录):"+ (te-tb) + "ms 平均:" + (te-tb)/n);
+		console.log("IP段异步查询(共获取"+(n/10000)+"万条记录):"+ (te-tb) + "ms - " + getQPS(n,te-tb));
 		
 		openspeed();
 		
@@ -69,7 +73,7 @@ if(arg == "-1"){
 		qqwry1.searchIPScope("0.0.0.0","255.255.255.255",function(err,iparr){
 			te = new Date();
 			n = iparr.length;
-			console.log("IP段异步查询(共获取"+(n/10000)+"万条记录):"+ (te-tb) + "ms 平均:" + (te-tb)/n);	
+			console.log("IP段异步查询(共获取"+(n/10000)+"万条记录):"+ (te-tb) + "ms - " + getQPS(n,te-tb));	
 		});
 	});
 
