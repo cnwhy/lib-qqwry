@@ -4,7 +4,7 @@ var qqwry2 = libqqwry.init();
 var arg = process.argv[2];
 
 function getQPS(n,s){
-	return "QPS: " + Math.round(n/s*1000/1024) + "k";
+	return "QPS: " + (n/s*1000/1024).toFixed(2) + "k";
 }
 
 function openspeed(){
@@ -66,9 +66,7 @@ if(arg == "-1"){
 		te = new Date();
 		n = iparr.length;
 		console.log("IP段异步查询(共获取"+(n/10000)+"万条记录):"+ (te-tb) + "ms - " + getQPS(n,te-tb));
-		
 		openspeed();
-		
 		tb = new Date();
 		qqwry1.searchIPScope("0.0.0.0","255.255.255.255",function(err,iparr){
 			te = new Date();
