@@ -16,7 +16,7 @@ npm install lib-qqwry
 
 ```js
 var libqqwry = require('lib-qqwry');
-var qqwry = libqqwry.init() //初始化IP库解析器
+var qqwry = libqqwry() //初始化IP库解析器
     .qqwry.speed(); //启用急速模式 比不开启效率率快非常多 但多占10M左右内存;
 var ip1 = qqwry.searchIP("202.103.102.10"); //查询IP信息
 var ips = qqwry.searchIPScope("0.0.0.0","1.0.0.0");  //查询IP段信息
@@ -28,19 +28,19 @@ qqwry.searchIPScope("0.0.0.0","1.0.0.0",function(err,iparr){
 
 ## API
 
-### .ipToInt(IP) IP地址转数值
+### libqqwry.ipToInt(IP) IP地址转数值
 ```
 > libqqwry.ipToInt("255.255.255.255")
 4294967295
 ```
 
-### .intToIP(INT) 数值转IP地址
+### libqqwry.intToIP(INT) 数值转IP地址
 ```
 > libqqwry.intToIP(4294967295)
 '255.255.255.255'
 ```
 
-### .ipEndianChange(INT) 字节序转换
+### libqqwry.ipEndianChange(INT) 字节序转换
 按32位转换参数的字节序  
 一些云平台的环境变量中IP信息可能是Little-Endian形式的数值; 
 
@@ -49,7 +49,7 @@ qqwry.searchIPScope("0.0.0.0","1.0.0.0",function(err,iparr){
 4278190081 //0xFF000001
 ```
 
-### .init(speed,dataPath) 实例化一个IP库解析器(Qqwry)
+### new libqqwry(speed,dataPath) 实例化一个IP库解析器对像(Qqwry)
 speed : 是否开启急速模式,可选; //默认false;
 dataPath : IP库路径,可选; //默认路径为data文件夹中(__dirname + "/data/qqwry.dat");
 // 可以简写为 libqqwry(speed,dataPath)
@@ -57,6 +57,7 @@ dataPath : IP库路径,可选; //默认路径为data文件夹中(__dirname + "/d
 var libqqwry = require('lib-qqwry');
 var qqwry = libqqwry(true);
 ```
+*libqqwry(), libqqwry.init()* 功能相同
 
 ## 解析器对像 Qqwry
 ### qqwry.searchIP(IP) 单个IP查询
