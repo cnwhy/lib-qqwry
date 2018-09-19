@@ -1,10 +1,10 @@
 var libqqwry = require('../');
 var qqwry1 = libqqwry();
-var qqwry2 = libqqwry.init();
+// var qqwry2 = libqqwry.init();
 var arg = process.argv[2];
 
 function getQPS(n,s){
-	return "QPS: " + Math.round(n/s*1000/1024) + "k";
+	return "QPS: " + (n/s).toFixed(1) + "k";
 }
 
 function openspeed(){
@@ -20,7 +20,7 @@ for(var i = 0; i < 100; i++){
 }
 
 //随机生成10个IP
-for(var i =0; i<10; i++){
+for(var i =0; i<5; i++){
 	var _ip = ips[i]
 	ipds.push([Math.random() * _ip >>> 0,_ip])
 }
@@ -30,7 +30,7 @@ if(arg == "-1"){
 	var tb,te,nn;
 	
 	tb = new Date();
-	nn = v1(1000,qqwry1);
+	nn = v1(100,qqwry1);
 	te = new Date();
 	console.log("单次查询("+(nn/10000)+"万次):"+ (te-tb) + "ms - " + getQPS(nn,te-tb));
 
@@ -66,9 +66,7 @@ if(arg == "-1"){
 		te = new Date();
 		n = iparr.length;
 		console.log("IP段异步查询(共获取"+(n/10000)+"万条记录):"+ (te-tb) + "ms - " + getQPS(n,te-tb));
-		
 		openspeed();
-		
 		tb = new Date();
 		qqwry1.searchIPScope("0.0.0.0","255.255.255.255",function(err,iparr){
 			te = new Date();
@@ -78,6 +76,7 @@ if(arg == "-1"){
 	});
 
 }else if(arg){//验证是否正常
+	// qqwry1.speed();
 	console.log(qqwry1.searchIP(arg));
 }else{
 	qqwry1.speed();
@@ -88,6 +87,7 @@ if(arg == "-1"){
 	var version = data[data.length-1]
 	console.log(version.Country + version.Area);
 	console.log(ips.join(' - ') + " | 共有数据:" + (data.length) + "条" , "查询耗时:" + (time2 - time1));
+	console.log(getQPS(data.length,time2 - time1));
 	return;
 }
 
