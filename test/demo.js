@@ -1,7 +1,7 @@
 ﻿var Qqwry = require('../index.js');
 var path = require('path');
 var dp = path.join(__dirname,"../data/qqwry.dat");
-var qqwry = Qqwry.init().speed(); // Qqwry.init() <=> Qqwry()
+var qqwry = Qqwry(); // Qqwry.init() <=> Qqwry()
 
 var ip1 = qqwry.searchIP("0.0.255.0"),
 	ip2 = qqwry.searchIP(0xFFFFFF00);
@@ -16,13 +16,13 @@ qqwry.searchIPScope("8.8.8.0","8.8.8.8",function(err,iparr){
 	console.log(iparr);
 });
 
-return; 
+// return; 
 
 //init 参数测试
-var qqwry1 = Qqwry.init(true)
-var qqwry2 = Qqwry.init(dp)
-var qqwry3 = Qqwry.init(dp,true)
-var qqwry4 = Qqwry.init(true,dp)
+var qqwry1 = Qqwry(true)
+var qqwry2 = Qqwry(dp)
+var qqwry3 = Qqwry(dp,true)
+var qqwry4 = Qqwry(true,dp)
 var v = qqwry.searchIP("255.255.255.255");
 var v1 = qqwry1.searchIP("255.255.255.255");
 var v2 = qqwry2.searchIP("255.255.255.255");

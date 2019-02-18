@@ -30,7 +30,7 @@ if(arg == "-1"){
 	var tb,te,nn;
 	
 	tb = new Date();
-	nn = v1(100,qqwry1);
+	nn = v1(500,qqwry1);
 	te = new Date();
 	console.log("单次查询("+(nn/10000)+"万次):"+ (te-tb) + "ms - " + getQPS(nn,te-tb));
 

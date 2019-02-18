@@ -65,10 +65,10 @@ IP : IP地址/IP数值
 反回一个JSON对像;  
 ```
 > qqwry.searchIP("255.255.255.255");
-{ int: 4294967040,
-  ip: '255.255.255.0',
+{ int: 4294967295,
+  ip: '255.255.255.255',
   Country: '纯真网络',
-  Area: '2015年5月30日IP数据' }
+  Area: '2017年1月5日IP数据' }
 ```
 
 ### qqwry.searchIPScope(beginIP,endIP,callback) IP段查询
