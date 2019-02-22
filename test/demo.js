@@ -26,7 +26,3 @@ qqwry.searchIPScope("8.8.8.0","8.8.8.8",function(err,iparr){
 });
 
 // return; 
-
-
-
-console.log([v,v1,v2,v3,v4].map(function(v){return v.Area}).join('\n'));
