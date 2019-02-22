@@ -1,0 +1,22 @@
+#!/usr/bin/env node
+
+const program = require('commander');
+const qqwryUpdate = require('./lib/qqwryUpdate');
+
+async function main(){
+	let {version} = await qqwryUpdate.getLastInfo();
+	let info = /\d+年\d+月\d+日/.exec(version);
+	if(info){
+		console.log('Data Remote:',info[0]+'数据');
+	}else{
+		console.error(version);
+	}
+};
+
+program
+	.name('remote')
+	.usage('')
+	.description('获取服务端 IP库信息')
+	.parse(process.argv);
+
+main().catch(console.error);

@@ -1,25 +1,33 @@
 {
-  "name": "lib-qqwry",
-  "version": "1.2.0",
-  "description": "Using NodeJS analytical IP Library (qqwry.dat) module.",
-  "main": "index.js",
-  "scripts": {
-    "test": "node ./test/test_v.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/cnwhy/lib-qqwry.git"
-  },
-  "keywords": [
-    "qqwry",
-    "纯真IP库",
-    "IP地址"
-  ],
-  "author": {
-    "name": "cnwhy"
-  },
-  "license": "BSD",
-  "dependencies": {
-    "gbk.js": "^0.2.0"
-  }
+	"name": "lib-qqwry",
+	"version": "2.0.0",
+	"description": "Using NodeJS analytical IP Library (qqwry.dat) module.",
+	"main": "index.js",
+	"scripts": {
+		"install": "qqwry update",
+		"test": "node ./test/test_v.js"
+	},
+	"bin": {
+		"qqwry": "bin/qqwry"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/cnwhy/lib-qqwry.git"
+	},
+	"keywords": [
+		"qqwry",
+		"纯真IP库",
+		"IP地址"
+	],
+	"author": {
+		"name": "cnwhy"
+	},
+	"license": "BSD",
+	"dependencies": {
+		"axios": "^0.18.0",
+		"commander": "^2.19.0",
+		"gbk.js": "^0.2.4",
+		"stream.pipeline-shim": "^1.0.4"
+	},
+	"devDependencies": {}
 }

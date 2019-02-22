@@ -1,0 +1,125 @@
+#!/usr/bin/env node
+
+const program = require('commander');
+const chalk = require('chalk');
+const fs = require('fs');
+const qqwry = require('..');
+
+const keys = ['begIP', 'endIP', 'Country', 'Area'];
+
+program
+	.name('search')
+	.usage('<ip> [ip...]')
+	.description('搜索IP/IP段')
+	.option('-r, --range', 'IP段模式查询')
+	.option('-f, --range-format <value>', '让IP段模式输出的特定格式 支持 "json" or "csv"', /^(json|csv)$/)
+	.option('-S, --on-speed', 'IP段查询模式时默认会启动speed模式, 添加此选项可关闭该设定')
+	.option('-o, --output <path>', '输出至文件')
+	.on('--help', function() {
+		console.log('');
+		console.log('Examples:');
+		console.log('  $ qqwry 1.0.0.0');
+		console.log('  $ qqwry 0.0.0.0 1.0.0.0 --csv');
+	})
+	.parse(process.argv);
+
+// console.log(program.opts());
+// console.log(process.argv)
+// console.log(program.args);
+
+function csv_decode(str) {
+	return str.replace(/^(.*[,"\n].*)$/, function(k) {
+		console.log(arguments);
+		return '"' + k.replace(/"/g, '""') + '"';
+	});
+}
+
+function format_json(val) {
+	return JSON.stringify([val.begIP, val.endIP, val.Country, val.Area]);
+}
+
+function format_csv(val) {
+	return keys.map(v => csv_decode(val[v])).join(',') + '\n';
+}
+
+if (program.args.length < 1) {
+	//return program.help();
+} else {
+	// console.log(program.args);
+	// return;
+	try {
+		let lib = qqwry();
+		let { range, rangeFormat, onSpeed, output } = program;
+		let ips = program.args.slice(0);
+		let stdout = process.stdout;
+		let outputFile = false;
+		if (output) {
+			outputFile = true;
+			stdout = fs.createWriteStream(output);
+			stdout.on('error', function(err){
+				console.error(err.message || err);
+			});
+			stdout.on('close', function() {
+				console.log('done');
+			});
+		}
+		if (range) {
+			let { min, max } = Math;
+			let ns = ips.map(qqwry.ipToInt);
+			let data;
+			onSpeed || lib.speed();
+			data = lib(min(...ns), max(...ns));
+			if (rangeFormat == 'json') {
+				stdout.write('[');
+				data.forEach(function(v, i) {
+					let str = format_json(v);
+					str += i == data.length - 1 ? '' : ',';
+					stdout.write(str);
+				});
+				stdout.write(']\n');
+				outputFile && stdout.end();
+			} else if (rangeFormat == 'csv') {
+				stdout.write(keys.map(csv_decode).join(',') + '\n');
+				data.forEach(function(v, i) {
+					let str = format_csv(v);
+					// str += i == data.length - 1 ? '' : ',';
+					stdout.write(str);
+				});
+				outputFile && stdout.end();
+			} else {
+				data.forEach(function(v) {
+					stdout.write(`${(v.begIP + ' - ' + v.endIP).padEnd(35)} ${v.Country} ${v.Area}\n`);
+					// console.log(`${v.begIP} - ${v.endIP} ${v.Country} ${v.Area}`);
+				});
+				outputFile && stdout.end();
+			}
+		} else if (ips.length > 1) {
+			ips.forEach(ip => {
+				let v = lib(ip);
+				console.log(`${v.ip} ${v.Country} ${v.Area}`);
+			});
+		} else {
+			let v = lib(ips[0]);
+			console.log(`${v.Country} ${v.Area}`);
+		}
+	} catch (err) {
+		console.error(chalk.red(err.message || err));
+	}
+}
+
+// console.log(program.ip,program.ip1);
+// function camelize(str) {
+// 	return str.replace(/-(\w)/g, (_, c) => (c ? c.toUpperCase() : ''));
+// }
+// function cleanArgs(cmd) {
+// 	const args = {};
+// 	cmd.options.forEach(o => {
+// 		const key = camelize(o.long.replace(/^--/, ''));
+// 		// if an option is not present and Command has a method with the same name
+// 		// it should not be copied
+// 		if (typeof cmd[key] !== 'function' && typeof cmd[key] !== 'undefined') {
+// 			args[key] = cmd[key];
+// 		}
+// 	});
+// 	return args;
+// }

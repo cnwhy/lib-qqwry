@@ -1,0 +1,45 @@
+#!/usr/bin/env node
+
+const program = require('commander');
+const chalk = require('chalk');
+const readline = require('readline');
+const path = require('path');
+const libqqwry = require('../');
+const qqwryUpdate = require('./lib/qqwryUpdate');
+
+const defDataPath = path.join(__dirname, '../data/qqwry.dat');
+
+function isLatest(lastVersion) {
+	let dataVersion = libqqwry().searchIP('255.255.255.255').Area;
+	lastVersion = lastVersion.substr(lastVersion.indexOf(' ') + 1);
+	return !!~dataVersion.indexOf(lastVersion);
+}
+
+async function update() {
+	console.log('正在获取最新IP库信息...');
+	let { version, key } = await qqwryUpdate.getLastInfo();
+	console.log('\n最新IP库信息:\n%s\n', version);
+	if (isLatest(version)) {
+		return console.log(chalk.yellow('当前IP库已是最新版本,无需更新!'));
+	}
+	console.log('当前默认IP库文件较旧, 开始更新...\n');
+	await qqwryUpdate.update(defDataPath, key);
+	console.log('更新完成!\n');
+}
+
+program
+	.name('update')
+	.description('更新IP库(qqwry.dat)')
+	.option('-l, --last', '获取最新IP库信息')
+	.parse(process.argv);
+
+if (program.last) {
+	qqwryUpdate.getLastInfo().then(data => {
+		console.log(data.version);
+	});
+} else {
+	update().catch(err => {
+		console.log(err.message || err);
+		// console.error(chalk.red(err.message || err));
+	});
+}
