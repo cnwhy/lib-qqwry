@@ -28,4 +28,4 @@ var v1 = qqwry1.searchIP("255.255.255.255");
 var v2 = qqwry2.searchIP("255.255.255.255");
 var v3 = qqwry3.searchIP("255.255.255.255");
 var v4 = qqwry4.searchIP("255.255.255.255");
-console.log([v,v1,v2,v3,v4].map(v=>v.Area).join('\n'));
+console.log([v,v1,v2,v3,v4].map(function(v){return v.Area}).join('\n'));
