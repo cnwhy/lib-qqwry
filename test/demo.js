@@ -3,6 +3,15 @@ var path = require('path');
 var dp = path.join(__dirname,"../data/qqwry.dat");
 var qqwry = Qqwry(); // Qqwry.init() <=> Qqwry()
 
+
+//init 参数测试
+console.log('int 参数测试')
+new Qqwry(true);
+Qqwry(true).searchIP("255.255.255.255");
+Qqwry(dp).searchIP("255.255.255.255");
+Qqwry(dp,true).searchIP("255.255.255.255");
+Qqwry(true,dp).searchIP("255.255.255.255");
+
 var ip1 = qqwry.searchIP("0.0.255.0"),
 	ip2 = qqwry.searchIP(0xFFFFFF00);
 	ips = qqwry.searchIPScope("8.8.8.0","8.8.8.9"); //IP 段查询
@@ -18,14 +27,6 @@ qqwry.searchIPScope("8.8.8.0","8.8.8.8",function(err,iparr){
 
 // return; 
 
-//init 参数测试
-var qqwry1 = Qqwry(true)
-var qqwry2 = Qqwry(dp)
-var qqwry3 = Qqwry(dp,true)
-var qqwry4 = Qqwry(true,dp)
-var v = qqwry.searchIP("255.255.255.255");
-var v1 = qqwry1.searchIP("255.255.255.255");
-var v2 = qqwry2.searchIP("255.255.255.255");
-var v3 = qqwry3.searchIP("255.255.255.255");
-var v4 = qqwry4.searchIP("255.255.255.255");
+
+
 console.log([v,v1,v2,v3,v4].map(function(v){return v.Area}).join('\n'));
