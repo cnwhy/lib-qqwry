@@ -1,0 +1,51 @@
+#!/usr/bin/env node
+
+const zlib = require('zlib');
+const fs = require('fs');
+const path = require('path');
+
+var input = path.join(__dirname, '../data/qqwry.dat.gz');
+var output = path.join(__dirname, '../data/qqwry.dat')
+
+// var fd = fs.openSync(input);
+var args = process.argv.slice(2);
+
+if(args[0] === '--uninstall'){
+	//压缩当前IP库
+	fs.open(output,'r',(err1,fd)=>{
+		if(err1){
+			return fs.open(input,'r',(err2,fd1)=>{
+				if(err2){
+					return console.error('压缩IP库失败!')
+				}
+				fs.closeSync(fd1)
+			})
+		}
+		fs.createReadStream('',{fd:fd})
+		.pipe(zlib.createGzip())
+		.pipe(fs.createWriteStream(input)).on('close',function(){
+			// fs.unlink(output, (err) => {
+			// 	if (err) throw err;
+			// })
+		});
+	})
+}else{
+	//解压IP库
+	fs.open(input,'r',(err1,fd)=>{
+		if(err1){
+			return fs.open(output,'r',(err2,fd1)=>{
+				if(err2){
+					return console.warn('未初始化IP库文件, 请确认库文件是否存在!')
+				}
+				fs.closeSync(fd1)
+			})
+		}
+		fs.createReadStream('',{fd:fd})
+		.pipe(zlib.createGunzip())
+		.pipe(fs.createWriteStream(output)).on('close',function(){
+			// fs.unlink(input, (err) => {
+			// 	if (err) throw err;
+			// })
+		});
+	});
+}

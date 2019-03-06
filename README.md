@@ -1,30 +1,44 @@
 # lib-qqwry
 
-`lib-qqwry`是一个高效查询纯真IP库(qqwry.dat)的模块;  
+`lib-qqwry`是一个高效纯真IP库(qqwry.dat)引擎;  
 
-### 实现的功能
-1. 通过IP地址或有效的IP数值,搜索IP地址对应的地理位置信息。  
-2. 搜索一个IP段的地理位置信息。  
-3. IP地址与数值的互转。  
-
-### 安装
+## 安装
 ```
-npm install lib-qqwry
+npm install lib-qqwry -g
 ```
 
-### 使用
+### cli
+![search](https://ywnz.com/uploads/allimg/18/1-1PR616122T44.gif)
+```shell
+ qqwry <ip> [ip...] #查询单个/多个IP 
+ qqwry <ip> [ip...] -r  #查询IP段(取最小IP 与 最大IP)
+ qqwry <ip> [ip...] -r -f csv -o ./ips.csv #查询IP段 以csv格式返回结果 存入文件(-f csv 可省略,会根据文件名判断格式)
+```
+> 更多命令请执行 `qqwry -h`
+
+### node
 
 ```js
 var libqqwry = require('lib-qqwry');
 var qqwry = libqqwry() //初始化IP库解析器
-    .qqwry.speed(); //启用急速模式 比不开启效率率快非常多 但多占10M左右内存;
+qqwry.speed(); //启用急速模式;
+
 var ip1 = qqwry.searchIP("202.103.102.10"); //查询IP信息
 var ips = qqwry.searchIPScope("0.0.0.0","1.0.0.0");  //查询IP段信息
 //异步查询IP段信息
 qqwry.searchIPScope("0.0.0.0","1.0.0.0",function(err,iparr){
   console.log(iparr);
 });
+//查询IP段信息,结果以可读流返回
+var ipStream = qqwry.searchIPScopeStream('0.0.0.0','1.0.0.0',{format:'json'});
+// s.pipe(fs.readFileSync(outFile))
+ipStream.pipe(process.stdout)
 ```
+## 更新IP库文件
+>　联网更新IP库文件
+
+全局使用 `qqwry update`;  
+项目内使用 `./node_modules/.bin/qqwry update`
 
 ## API
 
@@ -61,8 +75,9 @@ var qqwry = libqqwry(true);
 
 ## 解析器对像 Qqwry
 ### qqwry.searchIP(IP) 单个IP查询
-IP : IP地址/IP数值
+IP : IP地址/IP数值  
 反回一个JSON对像;  
+> 便捷调用: `qqwry(IP)` v1.2.0+
 ```
 > qqwry.searchIP("255.255.255.255");
 { int: 4294967295,
@@ -71,12 +86,13 @@ IP : IP地址/IP数值
   Area: '2017年1月5日IP数据' }
 ```
 
-### qqwry.searchIPScope(beginIP,endIP,callback) IP段查询
+### qqwry.searchIPScope(beginIP,endIP,[callback]) IP段查询
 beginIP : 启始IP  
 endIP : 结束IP  
-callback: 回调函数,不传则为同步查询 function(err,arrdata){};  
+callback: function(err,arrdata){} 没有回调则使用同步查询;  
+> 便捷调用: `qqwry(beginIP,endIP,callback)` v1.2.0+
 ```
-> qqwry.searchIPScope("8.8.8.0","8.8.8.8");
+> qqwry("8.8.8.0","8.8.8.8");
 [ { begInt: 134744064,
     endInt: 134744071,
     begIP: '8.8.8.0',
@@ -91,20 +107,29 @@ callback: 回调函数,不传则为同步查询 function(err,arrdata){};
     Area: '加利福尼亚州圣克拉拉县山景市谷歌公司DNS服务器' } ]
 ```
 
+### qqwry.searchIPScopeStream(beginIP,endIP,options) 流形式反回IP段结果 v1.3.0+
+`beginIP` : <string|int> // 启始IP  
+`endIP` : <string|int>   // 结束IP  
+`options.format` : <string> //输出格式, 支持 'text' , 'csv', 'json', 'object'
+options.outHeader: <boolean> //为`true`时 'csv' 会输出表头 , 'json' 会以键值对形式输出(参考`searchIPScope`方法); 默认 `false`
+
+> 流模式适合查询结果数据量较大的情况使用  
+> format说明: 'csv' , 'json' 格式适合直接输出到文件, 'object' 将返回对像流, 适合程序二次处理数据
+
+```shell
+> qqwry.searchIPScopeStream("8.8.8.0","8.8.8.8").pipe(process.stdout);
+8.8.8.0 - 8.8.8.7                   美国 加利福尼亚州圣克拉拉县山景市谷歌公司
+8.8.8.8 - 8.8.8.8                   美国 加利福尼亚州圣克拉拉县山景市谷歌公司DNS服务器
+
+> qqwry.searchIPScopeStream("8.8.8.0","8.8.8.8",{format:'csv'}).pipe(process.stdout);
+134744064,134744071,8.8.8.0,8.8.8.7,美国,加利福尼亚州圣克拉拉县山景市谷歌公司
+134744072,134744072,8.8.8.8,8.8.8.8,美国,加利福尼亚州圣克拉拉县山景市谷歌公司DNS服务器
+
+> qqwry.searchIPScopeStream("8.8.8.0","8.8.8.8",{format:'json'}).pipe(process.stdout);
+[[134744064,134744071,"8.8.8.0","8.8.8.7","美国","加利福尼亚州圣克拉拉县山景市谷歌公司"],[134744072,134744072,"8.8.8.8","8.8.8.8","美国","加利福尼亚州圣克拉拉县山景市谷歌公司DNS服务器"]]
+```
+
 ### qqwry.speed() 启用急速模式
-急速模式实质为将IP库文件读入内存中以提升效率, 是普通模式特别是HDD硬盘环境快50倍以上.
+急速模式实质为将IP库文件读入内存中以提升效率.
 
 ### qqwry.unSpeed() 停用急速模式
-
-## 文档说明
-1. ./data/qqwry.dat  默认IP库,可用最新IP库替换; 下载地址[www.cz88.net](http://www.cz88.net/)
-2. ./lib/qqwry.js  解析IP库的主文件;
-3. ./lib/gbk.js  GBK编码表文件,从[iconv-lite](https://github.com/ashtuchkin/iconv-lite)中找出来的,并增加了一个转码方法;
-4. ./test/demo.js  使用演示;
-5. ./test/test_v.js  效率测试示例;
-
-### 效率测试文件 test_v.js
-`node test_v.js 255.255.255.255` 正常工作检查  
-`node test_v.js -1` 单个查询效率测试  
-`node test_v.js -2` 10次IP段查询效率测试  
-`node test_v.js -3` 10次IP段异步查询效率测试  

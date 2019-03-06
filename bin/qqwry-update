@@ -1,0 +1,65 @@
+#!/usr/bin/env node
+
+const program = require('commander');
+const chalk = require('chalk');
+const path = require('path');
+const libqqwry = require('../');
+const qqwryUpdate = require('./lib/qqwryUpdate');
+
+const defDataPath = path.join(__dirname, '../data/qqwry.dat');
+
+function isLatest(lastVersion, path = defDataPath) {
+	let dataVersion = libqqwry(path).searchIP('255.255.255.255').Area;
+	lastVersion = lastVersion.substr(lastVersion.indexOf(' ') + 1);
+	return !!~dataVersion.indexOf(lastVersion);
+}
+
+async function upDate(path, key) {
+	await qqwryUpdate.update(path, key);
+}
+
+async function main() {
+	let dataPath = program.args[0] || defDataPath;
+	console.log('正在获取最新IP库信息...');
+	let { version, key } = await qqwryUpdate.getLastInfo();
+	console.log('\n最新IP库信息:\n%s\n', version);
+	if (isLatest(version, dataPath)) {
+		return console.log(chalk.yellow('当前IP库已是最新版本,无需更新!'));
+	}
+	console.log('当前默认IP库文件较旧, 开始更新...\n');
+	await upDate(dataPath, key);
+	console.log('更新完成!\n');
+}
+
+program
+	.name('update')
+	.usage('[dataPath] [options]')
+	.description('更新IP库(qqwry.dat)')
+	// .option('-l, --last', '获取最新IP库信息')
+	.option('-f, --force', '强制更新IP库')
+	.parse(process.argv);
+
+if (program.last || program.force) {
+	let lc = Promise.resolve();
+	lc.then(async () => {
+		let key;
+		if (program.last) {
+			key = await qqwryUpdate.getLastInfo().then(data => {
+				console.log(data.version);
+				return data.key;
+			});
+		}
+		if (program.force) {
+			await upDate(key);
+			console.log('更新完成!\n');
+		}
+	}).catch(err => {
+		// console.error(err);
+		console.error(err.message || err);
+	});
+} else {
+	main().catch(err => {
+		// console.error(err);
+		console.error(err.message || err);
+	});
+}

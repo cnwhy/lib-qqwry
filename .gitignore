@@ -5,9 +5,9 @@ lib-cov
 *.out
 *.pid
 *.gz
-
+!data/qqwry.dat.gz
 pids
 logs
 results
-
+data/qqwry.dat
 npm-debug.log
