@@ -1,8 +1,18 @@
+1.3.0 / 2019-03-12
+==================
+
+  * 修复在普通模式下,某些情况会丢失文件描述符的问题.
+  * 新增返回流API `qqwry.searchIPScopeStream`
+  * 新增 cli 命令模式
+    * `qqwry search <ip> [ips...]` 查询IP/IP段
+    * `qqwry find <keyword> [keyword...]` 反查IP段
+    * `qqwry update [dataPath]` 从纯真官网更新IP库文件
+
 1.2.0 / 2019-02-22
 ==================
 
   * 封装修改构建函数, 返回一个封装好的函数
-    * 弱化API 支持 新的对像支持 qqwry(ip), qqwry(ipBgin,ipEnd), qqwry(ipBgin,ipEnd,callback)
+    * 弱化API 支持 新的对像支持 `qqwry(ip)`, `qqwry(ipBgin,ipEnd)`, `qqwry(ipBgin,ipEnd,callback)`
     * 隐藏不必要的属性;
     * 绑定API函数上下文, 方便ES6解构赋值方式
   * 更新IP库2019年2月20日

@@ -5,9 +5,8 @@ lib-cov
 *.out
 *.pid
 *.gz
-
+*.tgz
+data/*.tmp
 pids
 logs
 results
-
-npm-debug.log
