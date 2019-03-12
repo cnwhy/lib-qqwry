@@ -60,7 +60,7 @@ ipStream.pipe(process.stdout)
 ```
 
 ### new libqqwry(speed,dataPath) 实例化一个IP库解析器对像(Qqwry)
-speed : 是否开启急速模式,可选; //默认false;
+speed : 是否开启急速模式,可选; //默认false;  
 dataPath : IP库路径,可选; //默认路径为data文件夹中(__dirname + "/data/qqwry.dat");
 // 可以简写为 libqqwry(speed,dataPath)
 ```js
@@ -72,7 +72,6 @@ var qqwry = libqqwry(true);
 ## 解析器对像 Qqwry
 ### qqwry.searchIP(IP) 单个IP查询
 IP : IP地址/IP数值  
-反回一个JSON对像;  
 > 便捷调用: `qqwry(IP)` v1.2.0+
 ```
 > qqwry.searchIP("255.255.255.255");
@@ -106,8 +105,9 @@ callback: function(err,arrdata){} 没有回调则使用同步查询;
 ### qqwry.searchIPScopeStream(beginIP,endIP,options) 流形式反回IP段结果 v1.3.0+
 `beginIP` : <string|int> // 启始IP  
 `endIP` : <string|int>   // 结束IP  
-`options.format` : <string> //输出格式, 支持 'text' , 'csv', 'json', 'object'
-`options.outHeader`: <boolean> //为`true`时 'csv' 会输出表头 , 'json' 会以对像数组形式输出(参考`searchIPScope`方法); 默认 `false`
+`options`:
+ - `format` : <string> //输出格式, 支持 'text' , 'csv', 'json', 'object'  
+ - `outHeader`: <boolean> //为`true`时 'csv' 会输出表头 , 'json' 会以对像数组形式输出(参考`searchIPScope`方法); 默认 `false`
 
 > 流模式适合查询结果数据量较大的情况使用  
 > format说明: 'csv' , 'json' 格式适合直接输出到文件, 'object' 将返回对像流, 适合程序二次处理数据
