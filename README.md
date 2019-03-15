@@ -73,8 +73,9 @@ var qqwry = libqqwry(true);
 ### qqwry.searchIP(IP) 单个IP查询
 IP : IP地址/IP数值  
 > 便捷调用: `qqwry(IP)` v1.2.0+
+
 ```
-> qqwry.searchIP("255.255.255.255");
+> qqwry("255.255.255.255");
 { int: 4294967295,
   ip: '255.255.255.255',
   Country: '纯真网络',
@@ -86,6 +87,7 @@ beginIP : 启始IP
 endIP : 结束IP  
 callback: function(err,arrdata){} 没有回调则使用同步查询;  
 > 便捷调用: `qqwry(beginIP,endIP,callback)` v1.2.0+
+
 ```
 > qqwry("8.8.8.0","8.8.8.8");
 [ { begInt: 134744064,

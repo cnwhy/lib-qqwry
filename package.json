@@ -2,7 +2,7 @@
   "name": "lib-qqwry",
   "version": "1.3.0",
   "description": "Using NodeJS analytical IP Library (qqwry.dat) module.",
-  "main": "index.js",
+  "main": "lib/qqwry",
   "scripts": {
     "test": "node ./test/test_v.js"
   },
