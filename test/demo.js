@@ -1,8 +1,7 @@
-﻿var Qqwry = require('../index.js');
+﻿var QQ = require('../');
 var path = require('path');
 var dp = path.join(__dirname,"../data/qqwry.dat");
 var qqwry = Qqwry(); // Qqwry.init() <=> Qqwry()
-
 
 //init 参数测试
 console.log('int 参数测试')
