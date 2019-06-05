@@ -19,7 +19,7 @@ declare namespace Spec {
 		/**
 		 * 输出数据的格式 支持 'json','csv' 默认 'text'
 		 */
-		fromat?: string;
+		format?: string;
 		/**
 		 * 是否输出字段名 默认 'false'
 		 */
