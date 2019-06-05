@@ -1,4 +1,4 @@
-﻿var QQ = require('../');
+﻿var Qqwry = require('../');
 var path = require('path');
 var dp = path.join(__dirname,"../data/qqwry.dat");
 var qqwry = Qqwry(); // Qqwry.init() <=> Qqwry()
