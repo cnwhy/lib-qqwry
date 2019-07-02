@@ -5,7 +5,6 @@ const fs = require('fs');
 const path = require('path');
 const qqwry = require('..');
 
-
 program
 	.name('search')
 	.usage('<ip> [ip...]')
@@ -36,13 +35,7 @@ if (program.args.length < 1) {
 			outputFile = true;
 			// let obj = path.parse(output);
 			let ext = path.parse(output).ext;
-			format = format
-				? format
-					: ext == '.json'
-					? 'json'
-						: ext == '.csv'
-						? 'csv'
-							: format;
+			format = format ? format : ext == '.json' ? 'json' : ext == '.csv' ? 'csv' : format;
 			stdout = fs.createWriteStream(output);
 			stdout.on('error', function(err) {
 				console.error(err.message || err);
@@ -55,7 +48,9 @@ if (program.args.length < 1) {
 			let { min, max } = Math;
 			let ns = ips.map(qqwry.ipToInt);
 			speed && lib.speed();
-			lib.searchIPScopeStream(min(...ns), max(...ns), { format: format, outHeader: header }).pipe(stdout);
+			lib.searchIPScopeStream(min(...ns), max(...ns), { format: format, outHeader: header }).pipe(
+				stdout
+			);
 		} else if (ips.length > 1) {
 			ips.forEach(ip => {
 				let v = lib(ip);

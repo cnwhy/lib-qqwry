@@ -23,10 +23,6 @@ function isLatest(lastVersion, path = defDataPath) {
 	return !!~dataVersion.indexOf(lastVersion);
 }
 
-async function upDate(path, key) {
-	await qqwryUpdate.update(path, key);
-}
-
 async function main() {
 	// let dataPath = program.args[0] || defDataPath;
 	let dataPath = defDataPath;
@@ -56,14 +52,16 @@ async function main() {
 			});
 		});
 	})();
-	p.then(
+	return p.then(
 		() => {
-			return upDate(dataPath, key).then(function() {
-				console.log('更新完成!\n');
+			return qqwryUpdate.update(dataPath, key).then(function() {
+				console.log('更新完成!');
 				// lc.close();
 			});
 		},
-		function() {}
+		()=>{
+			console.log('更新已取消!')
+		}
 	);
 }
 

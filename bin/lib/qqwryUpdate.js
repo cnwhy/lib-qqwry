@@ -41,18 +41,18 @@ class QqwryDecode extends stream.Transform {
 // async function getURLFile(url, resType = 'arraybuffer') {
 async function getURLFile(url, showProgressBar = false) {
 	return axios.get(url, { responseType: 'stream' }).then(res => {
-		if(showProgressBar){
+		if (showProgressBar) {
 			let bar = new ProgressBar('downloading [:bar]:percent :rate/bps :etas', {
 				complete: '=',
 				incomplete: ' ',
 				width: 20,
 				total: +res.headers['content-length']
 			});
-			res.data.on('data',function(buffer){
+			res.data.on('data', function(buffer) {
 				bar.tick(buffer.length);
-			})
+			});
 		}
-		return res.data
+		return res.data;
 	});
 }
 
@@ -74,14 +74,14 @@ async function update(dataPath, key) {
 	if (!key) {
 		key = (await getLastInfo()).key;
 	}
-	let _temPath = dataPath + ".tmp"
+	let _temPath = dataPath + '.tmp';
 	return pipeline(
 		await get_qqwry(true),
 		new QqwryDecode(key),
 		zlib.createInflate(),
 		fs.createWriteStream(_temPath)
-	).then(()=>{
-		fs.renameSync(_temPath,dataPath);
+	).then(() => {
+		fs.renameSync(_temPath, dataPath);
 	});
 }
 
