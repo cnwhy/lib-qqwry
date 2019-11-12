@@ -40,20 +40,31 @@ class QqwryDecode extends stream.Transform {
 
 // async function getURLFile(url, resType = 'arraybuffer') {
 async function getURLFile(url, showProgressBar = false) {
-	return axios.get(url, { responseType: 'stream' }).then(res => {
-		if (showProgressBar) {
-			let bar = new ProgressBar('downloading [:bar]:percent :rate/bps :etas', {
-				complete: '=',
-				incomplete: ' ',
-				width: 20,
-				total: +res.headers['content-length']
-			});
-			res.data.on('data', function(buffer) {
-				bar.tick(buffer.length);
-			});
-		}
-		return res.data;
-	});
+	return axios
+		.get(url, {
+			responseType: 'stream',
+			// 适应qqwry新规则
+			headers: {
+				'User-Agent': 'Mozilla/3.0 (compatible; Indy Library)'
+			}
+		})
+		.then(res => {
+			if (showProgressBar) {
+				let bar = new ProgressBar(
+					'downloading [:bar]:percent :rate/bps :etas',
+					{
+						complete: '=',
+						incomplete: ' ',
+						width: 20,
+						total: +res.headers['content-length']
+					}
+				);
+				res.data.on('data', function(buffer) {
+					bar.tick(buffer.length);
+				});
+			}
+			return res.data;
+		});
 }
 
 let get_copywrite = showBar => getURLFile(urls.copywrite, showBar);
