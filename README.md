@@ -15,8 +15,9 @@ npm i lib-qqwry
 
  * `qqwry search <ip> [ips...]` 查询IP/IP段
  * `qqwry find <keyword> [keyword...]` 反查IP段
- * `qqwry update [dataPath]` 从纯真官网更新IP库文件
-
+ * `qqwry update [dataPath]` ~~从纯真官网更新IP库文件~~  
+    > 纯真被`IPIP.net`收购之后，高春辉不再免费提供IP库
+    
 ### node
 
 ```js 
