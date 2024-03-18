@@ -55,7 +55,7 @@ declare namespace Spec {
 		 * @param {number|string} bginIP 起始IP
 		 * @param {number|string} endIP 结束IP
 		 * @param {object} [options] 输出配制
-		 * @param {string} [options.fromat] 输出数据的格式 支持 'json','csv' 默认 'text'
+		 * @param {string} [options.format] 输出数据的格式 支持 'json','csv' 默认 'text'
 		 * @param {Boolean} [options.outHeader] 是否输出字段名 默认 'false'
 		 */
 		searchIPScopeStream(
